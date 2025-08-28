@@ -9,13 +9,22 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from datetime import datetime, timedelta
 import json
+from dados_oficiais import dados_brasil
 
 class FinancialImpactAnalyzer:
     def __init__(self):
-        self.inflation_rate = 0.045  # 4.5% ao ano (média brasileira)
-        self.investment_return = 0.10  # 10% ao ano (conservador)
-        self.life_expectancy = 75
-        self.retirement_age = 65
+        # DADOS REAIS ATUALIZADOS (2025)
+        self.inflation_rate = dados_brasil.indicadores_bc['inflacao_atual'] / 100  # 4.86% (projeção 2025)
+        self.investment_return = dados_brasil.get_taxa_investimento_moderado() / 100  # 14% (CDB digitais)
+        self.life_expectancy = dados_brasil.demografia['expectativa_vida']  # 76.4 anos
+        self.retirement_age = dados_brasil.demografia['idade_aposentadoria_media']  # 65 anos
+        
+        # Taxas de investimento por perfil (dados reais 2025)
+        self.investment_rates = {
+            'conservador': dados_brasil.get_taxa_investimento_conservador() / 100,  # Tesouro IPCA+
+            'moderado': dados_brasil.get_taxa_investimento_moderado() / 100,       # CDB 99% CDI
+            'agressivo': dados_brasil.get_taxa_investimento_agressivo() / 100      # Ações + dividendos
+        }
         
     def calculate_opportunity_cost(self, amount, years, investment_rate=None):
         """
@@ -82,17 +91,49 @@ class FinancialImpactAnalyzer:
     
     def generate_spending_categories_analysis(self):
         """
-        Análise de categorias de gastos brasileiros baseada em dados do IBGE
+        Análise de categorias de gastos brasileiros baseada em dados reais (2024-2025)
+        Fontes: IBGE POF, Associações Setoriais, Pesquisas de Mercado
         """
+        # Usando dados reais do módulo dados_oficiais
+        gastos_reais = dados_brasil.gastos_desnecessarios
+        
         categories = {
-            'Alimentação Fora': {'monthly': 400, 'necessity_score': 3},
-            'Streaming/Assinaturas': {'monthly': 150, 'necessity_score': 2},
-            'Roupas/Acessórios': {'monthly': 300, 'necessity_score': 2},
-            'Bebidas Alcoólicas': {'monthly': 200, 'necessity_score': 1},
-            'Cigarro': {'monthly': 250, 'necessity_score': 0},
-            'Uber/99 Desnecessário': {'monthly': 180, 'necessity_score': 2},
-            'Compras Impulsivas': {'monthly': 350, 'necessity_score': 1},
-            'Jogos/Apostas': {'monthly': 100, 'necessity_score': 0},
+            'Alimentação Fora': {
+                'monthly': gastos_reais['alimentacao_fora']['valor_medio_mensal'],
+                'necessity_score': gastos_reais['alimentacao_fora']['necessidade']
+            },
+            'Streaming/Assinaturas': {
+                'monthly': gastos_reais['streaming_assinaturas']['valor_medio_mensal'],
+                'necessity_score': gastos_reais['streaming_assinaturas']['necessidade']
+            },
+            'Delivery Apps': {
+                'monthly': gastos_reais['delivery_apps']['valor_medio_mensal'],
+                'necessity_score': gastos_reais['delivery_apps']['necessidade']
+            },
+            'Roupas/Acessórios': {
+                'monthly': gastos_reais['roupas_acessorios']['valor_medio_mensal'],
+                'necessity_score': gastos_reais['roupas_acessorios']['necessidade']
+            },
+            'Bebidas Alcoólicas': {
+                'monthly': gastos_reais['bebidas_alcoolicas']['valor_medio_mensal'],
+                'necessity_score': gastos_reais['bebidas_alcoolicas']['necessidade']
+            },
+            'Cigarro/Tabaco': {
+                'monthly': gastos_reais['cigarro_tabaco']['valor_medio_mensal'],
+                'necessity_score': gastos_reais['cigarro_tabaco']['necessidade']
+            },
+            'Transporte Desnecessário': {
+                'monthly': gastos_reais['transporte_desnecessario']['valor_medio_mensal'],
+                'necessity_score': gastos_reais['transporte_desnecessario']['necessidade']
+            },
+            'Compras Impulsivas': {
+                'monthly': gastos_reais['compras_impulso']['valor_medio_mensal'],
+                'necessity_score': gastos_reais['compras_impulso']['necessidade']
+            },
+            'Jogos/Apostas Online': {
+                'monthly': gastos_reais['jogos_apostas']['valor_medio_mensal'],
+                'necessity_score': gastos_reais['jogos_apostas']['necessidade']
+            }
         }
         
         analysis = {}

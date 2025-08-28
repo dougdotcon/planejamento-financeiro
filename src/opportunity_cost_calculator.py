@@ -8,22 +8,29 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 import json
+from dados_oficiais import dados_brasil
 
 class OpportunityCostCalculator:
     def __init__(self):
+        # TAXAS DE INVESTIMENTO REAIS (2025)
         self.investment_rates = {
-            'conservador': 0.08,  # 8% - Tesouro IPCA+
-            'moderado': 0.10,     # 10% - Fundos DI + Ações
-            'agressivo': 0.12,    # 12% - Ações + REITs
-            'crypto': 0.15        # 15% - Criptomoedas (alta volatilidade)
+            'conservador': dados_brasil.get_taxa_investimento_conservador() / 100,  # Tesouro IPCA+ real
+            'moderado': dados_brasil.get_taxa_investimento_moderado() / 100,       # CDB 99% CDI
+            'agressivo': dados_brasil.get_taxa_investimento_agressivo() / 100,     # Ações + dividendos
+            'poupanca': dados_brasil.investimentos['poupanca'] / 100,              # Poupança atual
+            'tesouro_selic': dados_brasil.investimentos['tesouro_selic'] / 100     # Tesouro Selic
         }
         
+        # DADOS BRASILEIROS OFICIAIS (2025)
         self.brazilian_data = {
-            'salario_minimo': 1320,
-            'renda_media': 2800,
-            'inflacao_media': 0.045,
-            'horas_trabalho_mes': 220,
-            'expectativa_vida': 75
+            'salario_minimo': dados_brasil.salario_minimo['valor'],                    # R$ 1.518 (2025)
+            'renda_media': dados_brasil.renda_trabalho['renda_media_nacional'],       # R$ 3.200
+            'renda_formal': dados_brasil.renda_trabalho['renda_media_formal'],        # R$ 4.500
+            'inflacao_atual': dados_brasil.indicadores_bc['inflacao_atual'],         # 4,86%
+            'selic_atual': dados_brasil.indicadores_bc['selic'],                     # 14,25%
+            'horas_trabalho_mes': dados_brasil.renda_trabalho['horas_trabalho_mes'], # 192h
+            'expectativa_vida': dados_brasil.demografia['expectativa_vida'],         # 76,4 anos
+            'fonte': 'IBGE, Banco Central, Gov. Federal (2025)'
         }
     
     def calculate_time_cost(self, amount, hourly_wage):
