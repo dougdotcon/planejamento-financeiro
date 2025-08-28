@@ -179,25 +179,28 @@ depois = {
 
 ## Como Usar Este Projeto
 
-1. **Instale as dependências**:
+### 🚀 **Para Análise Rápida:**
 ```bash
-pip install -r requirements.txt
+# Teste com dados reais
+python examples/teste_dados_reais.py
+
+# Análise completa
+python scripts/gerar_resultados.py
+
+# Calculadora personalizada
+python src/opportunity_cost_calculator.py --renda 5000 --gastos 1200
 ```
 
-2. **Execute a análise principal**:
-```bash
-python financial_impact_analyzer.py
-```
+### 📚 **Para Transformação Completa:**
+**NOVO: Sistema Completo de Escape Financeiro**
 
-3. **Gere relatórios visuais**:
-```bash
-python data_visualizer.py --profile seu_perfil
-```
+1. **[Guia por Idade](docs/ESCAPE_FINANCEIRO_POR_IDADE.md)** - Estratégias específicas por faixa etária
+2. **[Ações Imediatas](docs/ACOES_IMEDIATAS_POR_PERFIL.md)** - Checklist prático para implementar hoje
+3. **[Mindset de Transformação](docs/MINDSET_TRANSFORMACAO_FINANCEIRA.md)** - Reprogramação mental
+4. **[Sistema Completo](docs/SISTEMA_COMPLETO_ESCAPE_FINANCEIRO.md)** - Plano estruturado de evolução
+5. **[Índice Completo](docs/INDICE_ESCAPE_FINANCEIRO.md)** - Guia de navegação
 
-4. **Calcule seu custo de oportunidade**:
-```bash
-python opportunity_cost_calculator.py --renda 5000 --gastos 1200
-```
+**🎯 Caso Específico:** Se você tem 30 anos, é de TI e está desempregado, veja seu plano personalizado no [Guia por Idade](docs/ESCAPE_FINANCEIRO_POR_IDADE.md#-30-anos---seu-caso-específico)
 
 ## Base Científica
 
